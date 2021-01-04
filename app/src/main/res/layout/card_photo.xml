@@ -9,12 +9,13 @@
     </data>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardElevation="2dp">
 
         <ImageView
-            android:id="@+id/roundedImageView"
+            android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"

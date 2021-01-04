@@ -5,19 +5,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.tapok.unsplash.MainGraphDirections
 import com.tapok.unsplash.databinding.FragmentMainBinding
-import com.tapok.unsplash.model.UnsplashPhoto
-import com.tapok.unsplash.retrofit.RetrofitClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.tapok.unsplash.repos.RandomRepository
+import com.tapok.unsplash.viewmodel.RandomViewModel
 
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
 
-    private var v: MutableLiveData<UnsplashPhoto> = MutableLiveData()
+    private val viewModel: RandomViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,24 +30,27 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        v.observe(viewLifecycleOwner) {
-            Log.e("unsplash", it.toString())
-            binding.swipeContainer.isRefreshing = false
-            binding.test.photo = v.value
-        }
-        binding.swipeContainer.setOnRefreshListener {
-            sendReq()
-        }
-        savedInstanceState ?: sendReq()
-    }
-
-    private fun sendReq() {
-        try {
-            GlobalScope.launch(Dispatchers.IO) {
-                v.postValue(RetrofitClient.unsplashService().getRandomImage())
+        viewModel.data.observe(viewLifecycleOwner) { result ->
+            binding.test.layout.isVisible = result !is RandomRepository.DataState.Idle && result !is RandomRepository.DataState.Failed
+            binding.errorLayout.layout.isVisible = result is RandomRepository.DataState.Failed
+            when (result) {
+                RandomRepository.DataState.Idle -> {
+                }
+                RandomRepository.DataState.Start -> {
+                }
+                is RandomRepository.DataState.Success -> {
+                    Log.e("unsplash", result.data.toString())
+                    binding.test.photo = result.data
+                }
+                is RandomRepository.DataState.Failed -> {
+                    Log.e("ERROR", result.e.toString())
+                }
             }
-        } catch (e: Exception) {
-            Log.e("ERROR", e.toString())
         }
+        binding.viewModel = viewModel
+        binding.test.image.setOnClickListener {
+            findNavController().navigate(MainGraphDirections.actionGlobalDetailPhotoFragment(binding.test.photo!!))
+        }
+        if (viewModel.data.value is RandomRepository.DataState.Idle) viewModel.loadData()
     }
 }

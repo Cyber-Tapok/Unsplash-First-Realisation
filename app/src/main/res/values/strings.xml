@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Unsplash</string>
+    <string name="photo_size">Разрешение &lt;font color="#FFFFFF">%1$dx%2$d&lt;/font></string>
+    <string name="label_photo_information">Сведения</string>
+    <string name="label_photo_description">Описание: &lt;font color=""#FFFFFF"">%1$s&lt;/font></string>
+    <string name="button_open_full_photo">Открыть в хорошем качестве</string>
+    <string name="text_error">Произошла ошибка</string>
 </resources>

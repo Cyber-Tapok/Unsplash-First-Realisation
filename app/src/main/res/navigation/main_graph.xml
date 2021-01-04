@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/main_graph">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/nav_main_fragment">
 
+    <fragment
+        android:id="@+id/nav_main_fragment"
+        android:name="com.tapok.unsplash.ui.MainFragment"
+        android:label="MainFragment">
+        <action
+            android:id="@+id/action_nav_main_fragment_to_nav_search_results_fragment"
+            app:destination="@id/nav_search_results_fragment" />
+        <action
+            android:id="@+id/action_nav_main_fragment_to_nav_collections_fragment"
+            app:destination="@id/nav_collections_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_detail_photo_fragment"
+        android:name="com.tapok.unsplash.ui.DetailPhotoFragment"
+        android:label="DetailPhotoFragment" >
+        <argument
+            android:name="Photo"
+            app:argType="com.tapok.unsplash.model.UnsplashPhoto" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_search_results_fragment"
+        android:name="com.tapok.unsplash.ui.SearchResultsFragment"
+        android:label="SearchResultsFragment" />
+    <fragment
+        android:id="@+id/nav_collections_fragment"
+        android:name="com.tapok.unsplash.ui.CollectionsFragment"
+        android:label="CollectionsFragment" />
+    <action
+        android:id="@+id/action_global_detail_photo_fragment"
+        app:destination="@id/nav_detail_photo_fragment"
+        app:enterAnim="@android:anim/slide_in_left"
+        app:exitAnim="@android:anim/slide_out_right"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
 </navigation>
