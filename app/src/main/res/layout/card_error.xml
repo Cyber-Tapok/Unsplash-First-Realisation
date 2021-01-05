@@ -6,6 +6,7 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:cardCornerRadius="5dp"
         app:cardElevation="2dp">
 
         <LinearLayout
@@ -26,13 +27,13 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@android:color/holo_red_light" />
             <TextView
+                android:id="@+id/text_error"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="8dp"
                 android:gravity="center"
                 android:textColor="@android:color/holo_red_light"
-                android:textSize="14sp"
-                android:text="@string/text_error"/>
+                android:textSize="14sp"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </layout>

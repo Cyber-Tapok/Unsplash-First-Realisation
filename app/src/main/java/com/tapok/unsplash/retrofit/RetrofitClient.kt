@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 
 
 object RetrofitClient {
-    private const val BASE_URL = "https://api.unsplash.com/photos/"
+    private const val BASE_URL = "https://api.unsplash.com/"
 
     private val client: OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(100, TimeUnit.SECONDS)

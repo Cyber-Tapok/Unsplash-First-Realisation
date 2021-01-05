@@ -1,15 +1,14 @@
 package com.tapok.unsplash.repos
 
 import androidx.lifecycle.MutableLiveData
-import com.tapok.unsplash.model.UnsplashPhoto
+import com.tapok.unsplash.model.Collections
 import com.tapok.unsplash.retrofit.DataState
 import com.tapok.unsplash.retrofit.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.net.SocketTimeoutException
 
-class RandomRepository {
-    private val _data: MutableLiveData<DataState<UnsplashPhoto>> = MutableLiveData(DataState.Idle)
+class CollectionsRepository {
+    private val _data: MutableLiveData<DataState<Collections>> = MutableLiveData(DataState.Idle)
 
     val data get() = _data
 
@@ -17,7 +16,7 @@ class RandomRepository {
         withContext(Dispatchers.IO) {
             data.postValue(DataState.Start)
             try {
-                val response = RetrofitClient.unsplashService().getRandomImage()
+                val response = RetrofitClient.unsplashService().getCollections(1)
                 data.postValue(DataState.Success(response))
             } catch (e: Exception) {
                 data.postValue(DataState.Failed(e))

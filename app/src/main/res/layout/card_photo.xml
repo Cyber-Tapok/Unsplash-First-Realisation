@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-        <variable
-            name="photo"
-            type="com.tapok.unsplash.model.UnsplashPhoto" />
-    </data>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/layout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardElevation="2dp">
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/image"
+        <include
+            android:id="@+id/layout_photo"
+            layout="@layout/card_load_photo"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="false"
-            app:loadPhoto="@{photo}"/>
-    </androidx.cardview.widget.CardView>
+            android:layout_height="250dp"
+            android:layout_marginVertical="20dp" />
+
+        <include
+            android:id="@+id/layout_error"
+            layout="@layout/card_error"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginVertical="20dp" />
+    </LinearLayout>
 </layout>

@@ -11,13 +11,16 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.tapok.unsplash.MainGraphDirections
 import com.tapok.unsplash.databinding.FragmentMainBinding
-import com.tapok.unsplash.repos.RandomRepository
+import com.tapok.unsplash.retrofit.DataState
+import com.tapok.unsplash.utils.getMessageId
+import com.tapok.unsplash.viewmodel.CollectionsViewModel
 import com.tapok.unsplash.viewmodel.RandomViewModel
 
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
 
     private val viewModel: RandomViewModel by viewModels()
+    private val collectionsViewModel: CollectionsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,26 +34,53 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.data.observe(viewLifecycleOwner) { result ->
-            binding.test.layout.isVisible = result !is RandomRepository.DataState.Idle && result !is RandomRepository.DataState.Failed
-            binding.errorLayout.layout.isVisible = result is RandomRepository.DataState.Failed
+            binding.randomPhoto.layoutPhoto.layout.isVisible =
+                result !is DataState.Idle && result !is DataState.Failed
+            binding.randomPhoto.layoutError.layout.isVisible =
+                result is DataState.Failed
             when (result) {
-                RandomRepository.DataState.Idle -> {
+                DataState.Idle -> {
                 }
-                RandomRepository.DataState.Start -> {
+                DataState.Start -> {
                 }
-                is RandomRepository.DataState.Success -> {
+                is DataState.Success -> {
                     Log.e("unsplash", result.data.toString())
-                    binding.test.photo = result.data
+                    binding.randomPhoto.layoutPhoto.photo = result.data
                 }
-                is RandomRepository.DataState.Failed -> {
+                is DataState.Failed -> {
                     Log.e("ERROR", result.e.toString())
+                    binding.randomPhoto.layoutError.textError.text =
+                        getString(result.e.getMessageId())
+                }
+            }
+        }
+        collectionsViewModel.data.observe(viewLifecycleOwner) { result ->
+            binding.collection.coverPhoto.layoutPhoto.layout.isVisible =
+                result !is DataState.Idle && result !is DataState.Failed
+            binding.collection.coverPhoto.layoutError.layout.isVisible =
+                result is DataState.Failed
+            when (result) {
+                DataState.Idle -> {
+                }
+                DataState.Start -> {
+                }
+                is DataState.Success -> {
+                    Log.e("unsplash", result.data.toString())
+                    binding.collection.collection = result.data[1]
+                    binding.collection.coverPhoto.layoutPhoto.photo = result.data[1].cover_photo
+                }
+                is DataState.Failed -> {
+                    Log.e("ERROR", result.e.toString())
+                    binding.collection.coverPhoto.layoutError.textError.text =
+                        getString(result.e.getMessageId())
                 }
             }
         }
         binding.viewModel = viewModel
-        binding.test.image.setOnClickListener {
-            findNavController().navigate(MainGraphDirections.actionGlobalDetailPhotoFragment(binding.test.photo!!))
+        binding.randomPhoto.layoutPhoto.image.setOnClickListener {
+            findNavController().navigate(MainGraphDirections.actionGlobalDetailPhotoFragment(binding.randomPhoto.layoutPhoto.photo!!))
         }
-        if (viewModel.data.value is RandomRepository.DataState.Idle) viewModel.loadData()
+        if (viewModel.data.value is DataState.Idle) viewModel.loadData()
+        if (collectionsViewModel.data.value is DataState.Idle) collectionsViewModel.loadData()
     }
 }
