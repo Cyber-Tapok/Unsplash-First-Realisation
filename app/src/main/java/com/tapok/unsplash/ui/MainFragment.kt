@@ -9,7 +9,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
+import com.tapok.unsplash.CollectionsAdapter
 import com.tapok.unsplash.MainGraphDirections
+import com.tapok.unsplash.MarginItemDecoration
 import com.tapok.unsplash.databinding.FragmentMainBinding
 import com.tapok.unsplash.retrofit.DataState
 import com.tapok.unsplash.utils.getMessageId
@@ -18,6 +22,7 @@ import com.tapok.unsplash.viewmodel.RandomViewModel
 
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
+    private val collectionsAdapter = CollectionsAdapter()
 
     private val viewModel: RandomViewModel by viewModels()
     private val collectionsViewModel: CollectionsViewModel by viewModels()
@@ -33,6 +38,8 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        collectionsAdapter.setHasStableIds(true)
+        bindRecyclerView()
         viewModel.data.observe(viewLifecycleOwner) { result ->
             binding.randomPhoto.layoutPhoto.layout.isVisible =
                 result !is DataState.Idle && result !is DataState.Failed
@@ -55,10 +62,6 @@ class MainFragment : Fragment() {
             }
         }
         collectionsViewModel.data.observe(viewLifecycleOwner) { result ->
-            binding.collection.coverPhoto.layoutPhoto.layout.isVisible =
-                result !is DataState.Idle && result !is DataState.Failed
-            binding.collection.coverPhoto.layoutError.layout.isVisible =
-                result is DataState.Failed
             when (result) {
                 DataState.Idle -> {
                 }
@@ -66,13 +69,10 @@ class MainFragment : Fragment() {
                 }
                 is DataState.Success -> {
                     Log.e("unsplash", result.data.toString())
-                    binding.collection.collection = result.data[1]
-                    binding.collection.coverPhoto.layoutPhoto.photo = result.data[1].cover_photo
+                    collectionsAdapter.setData(result.data)
                 }
                 is DataState.Failed -> {
                     Log.e("ERROR", result.e.toString())
-                    binding.collection.coverPhoto.layoutError.textError.text =
-                        getString(result.e.getMessageId())
                 }
             }
         }
@@ -82,5 +82,15 @@ class MainFragment : Fragment() {
         }
         if (viewModel.data.value is DataState.Idle) viewModel.loadData()
         if (collectionsViewModel.data.value is DataState.Idle) collectionsViewModel.loadData()
+    }
+
+    private fun bindRecyclerView() {
+        binding.collectionList.apply {
+            setHasFixedSize(true)
+            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+            addItemDecoration(MarginItemDecoration(15))
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = collectionsAdapter
+        }
     }
 }
