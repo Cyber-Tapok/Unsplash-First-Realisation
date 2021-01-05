@@ -38,7 +38,6 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        collectionsAdapter.setHasStableIds(true)
         bindRecyclerView()
         viewModel.data.observe(viewLifecycleOwner) { result ->
             binding.randomPhoto.layoutPhoto.layout.isVisible =
@@ -87,7 +86,8 @@ class MainFragment : Fragment() {
     private fun bindRecyclerView() {
         binding.collectionList.apply {
             setHasFixedSize(true)
-            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+            setItemViewCacheSize(20)
+            isDrawingCacheEnabled = true
             addItemDecoration(MarginItemDecoration(15))
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = collectionsAdapter
