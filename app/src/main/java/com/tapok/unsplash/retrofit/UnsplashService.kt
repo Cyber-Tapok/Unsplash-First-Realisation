@@ -5,6 +5,7 @@ import com.tapok.unsplash.model.CollectionsPhoto
 import com.tapok.unsplash.model.UnsplashPhoto
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface UnsplashService {
@@ -23,11 +24,12 @@ interface UnsplashService {
     ): Collections
 
     @Headers("Accept-Version: v1")
-    @GET("collections")
+    @GET("collections/{id}/photos")
     suspend fun getCollectionsPhoto(
-        @Query("id") id: String,
+        @Path("id") id: String,
         @Query("page") page: Int,
-        @Query("per_page") perPage: Int = PER_PAGE_DEFAULT
+        @Query("per_page") perPage: Int = PER_PAGE_DEFAULT,
+        @Query("client_id") clientId: String = CLIENT_ID,
     ): CollectionsPhoto
 
     companion object {
