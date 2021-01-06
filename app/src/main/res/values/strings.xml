@@ -5,6 +5,7 @@
     <string name="label_photo_description">Описание: &lt;font color=""#FFFFFF"">%1$s&lt;/font></string>
     <string name="button_open_full_photo">Открыть в хорошем качестве</string>
     <string name="label_total_photos">%1$d фото</string>
+    <string name="label_collections">Коллекции</string>
     <string name="text_http_error_400">Неверный запрос</string>
     <string name="text_http_error_401">Несанкционированный запрос</string>
     <string name="text_http_error_403">Отсуствует разрешение на запрос</string>
@@ -13,5 +14,6 @@
     <string name="text_host_error">Нет подключения к интернету</string>
     <string name="text_timeout_error">Время ожидания вышло</string>
     <string name="text_other_error">Что-то пошло не так</string>
+
 
 </resources>

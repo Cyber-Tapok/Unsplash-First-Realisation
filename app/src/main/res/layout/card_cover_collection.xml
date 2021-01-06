@@ -9,70 +9,78 @@
             type="com.tapok.unsplash.model.CollectionsItem" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="250dp"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/main_layout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="0dp"
         android:focusable="true">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/layout"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adjustViewBounds="false"
-                android:contentDescription="@{collection.cover_photo.alt_description}"
-                android:scaleType="centerCrop"
-                app:loadPhoto="@{collection.cover_photo}" />
-
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:text="@{collection.title}"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/layout" />
-
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:divider="?android:dividerVertical"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp"
-            android:showDividers="middle"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title">
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/layout"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="2dp">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="false"
+                    android:contentDescription="@{collection.cover_photo.alt_description}"
+                    android:scaleType="centerCrop"
+                    app:loadPhoto="@{collection.cover_photo}" />
+
+            </androidx.cardview.widget.CardView>
 
             <TextView
-                android:id="@+id/description"
-                android:layout_width="wrap_content"
+                android:id="@+id/title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="@{@string/label_total_photos(collection.total_photos)}"
-                android:textSize="13sp" />
+                android:layout_marginVertical="10dp"
+                android:singleLine="true"
+                android:text="@{collection.title}"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="18sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
 
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@{collection.user.name}"
-                android:textSize="13sp" />
+                android:divider="?android:dividerVertical"
+                android:orientation="horizontal"
+                android:showDividers="middle">
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="@{@string/label_total_photos(collection.total_photos)}"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@{collection.user.name}"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
         </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

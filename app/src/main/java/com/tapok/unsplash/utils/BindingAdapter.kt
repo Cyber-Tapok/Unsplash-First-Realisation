@@ -1,6 +1,5 @@
 package com.tapok.unsplash.utils
 
-import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
@@ -9,7 +8,6 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.FutureTarget
 import com.tapok.unsplash.model.UnsplashPhoto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -21,23 +19,17 @@ import kotlinx.coroutines.withContext
 fun loadImage(view: ImageView, photo: UnsplashPhoto?) {
     if (photo != null) {
         GlobalScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
+                Glide.with(view).clear(view)
+            }
             val bitmap = BlurHashDecoder.decode(
                 photo.blurHash,
                 photo.width / RESIZE_MULTIPLIER,
                 photo.height / RESIZE_MULTIPLIER
             )
             val drawable: Drawable = BitmapDrawable(view.resources, bitmap)
-//            withContext(Dispatchers.Main) {
-//                Glide.with(view).load(drawable).placeholder(drawable).into(view)
-//            }
-//            val futureTarget: FutureTarget<Bitmap> =
-//                Glide.with(view).asBitmap().load(photo.urls.regular).submit(
-//                    photo.width / 5,
-//                    photo.height / 5
-//                )
-//            val bit = futureTarget.get()
             withContext(Dispatchers.Main) {
-                Glide.with(view).load(photo.urls.full).placeholder(drawable).into(view)
+                Glide.with(view).load(photo.urls.regular).placeholder(drawable).into(view)
             }
         }
     }

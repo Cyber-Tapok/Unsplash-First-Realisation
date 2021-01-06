@@ -10,12 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.tapok.unsplash.CollectionsAdapter
 import com.tapok.unsplash.MainGraphDirections
-import com.tapok.unsplash.MarginItemDecoration
 import com.tapok.unsplash.databinding.FragmentMainBinding
 import com.tapok.unsplash.retrofit.DataState
+import com.tapok.unsplash.utils.PreCachingLayoutManager
 import com.tapok.unsplash.utils.getMessageId
 import com.tapok.unsplash.viewmodel.CollectionsViewModel
 import com.tapok.unsplash.viewmodel.RandomViewModel
@@ -84,13 +83,19 @@ class MainFragment : Fragment() {
     }
 
     private fun bindRecyclerView() {
+        collectionsAdapter.clickListener = { collection ->
+            findNavController().navigate(MainFragmentDirections.actionNavMainFragmentToNavCollectionsFragment(collection))
+        }
         binding.collectionList.apply {
             setHasFixedSize(true)
-            setItemViewCacheSize(20)
-            isDrawingCacheEnabled = true
-            addItemDecoration(MarginItemDecoration(15))
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+//            addItemDecoration(MarginItemDecoration(20))
+            layoutManager =
+                PreCachingLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            (layoutManager as PreCachingLayoutManager).initialPrefetchItemCount = 5
+            (layoutManager as PreCachingLayoutManager).setExtraLayoutSpace(getDisplayWidth())
             adapter = collectionsAdapter
         }
     }
+
+    private fun getDisplayWidth() = resources.displayMetrics.widthPixels * 2
 }
