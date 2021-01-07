@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tapok.unsplash.databinding.CardCollectionPhotoBinding
-import com.tapok.unsplash.model.Collections
 import com.tapok.unsplash.model.CollectionsPhoto
 import com.tapok.unsplash.model.UnsplashPhoto
 
@@ -27,6 +26,10 @@ class CollectionsPhotoAdapter : RecyclerView.Adapter<CollectionsPhotoAdapter.Pho
     fun setData(dataList: CollectionsPhoto) {
         this.dataList = dataList
         notifyDataSetChanged()
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
     inner class PhotoViewHolder(val binding: CardCollectionPhotoBinding) :

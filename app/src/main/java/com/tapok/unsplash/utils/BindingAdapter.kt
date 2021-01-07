@@ -8,6 +8,7 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.tapok.unsplash.model.UnsplashPhoto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -18,9 +19,10 @@ import kotlinx.coroutines.withContext
 @BindingAdapter("loadPhoto")
 fun loadImage(view: ImageView, photo: UnsplashPhoto?) {
     if (photo != null) {
+        view.layout(0,0,0,0)
         GlobalScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main) {
-                Glide.with(view).clear(view)
+//                Glide.with(view).clear(view)
             }
             val bitmap = BlurHashDecoder.decode(
                 photo.blurHash,
@@ -29,7 +31,12 @@ fun loadImage(view: ImageView, photo: UnsplashPhoto?) {
             )
             val drawable: Drawable = BitmapDrawable(view.resources, bitmap)
             withContext(Dispatchers.Main) {
-                Glide.with(view).load(photo.urls.regular).placeholder(drawable).into(view)
+                Glide.with(view)
+                    .load(photo.urls.regular)
+//                    .skipMemoryCache(true)
+//                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .dontTransform()
+                    .placeholder(drawable).into(view)
             }
         }
     }
@@ -45,4 +52,4 @@ fun setDescriptionVisibility(textView: TextView, description: String?) {
     textView.isVisible = !description.isNullOrEmpty()
 }
 
-private const val RESIZE_MULTIPLIER = 10
+private const val RESIZE_MULTIPLIER = 100

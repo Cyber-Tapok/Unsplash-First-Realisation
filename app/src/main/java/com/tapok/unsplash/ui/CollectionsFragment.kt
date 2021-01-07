@@ -22,7 +22,7 @@ class CollectionsFragment : Fragment() {
     private lateinit var binding: FragmentCollectionsBinding
     private lateinit var collection: CollectionsItem
     private val viewModel: CollectionsPhotoViewModel by viewModels()
-    private val photoAdapter = CollectionsPhotoAdapter()
+    private var  photoAdapter: CollectionsPhotoAdapter = CollectionsPhotoAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +39,7 @@ class CollectionsFragment : Fragment() {
         collection = getCollection()
         binding.collection = collection
         viewModel.data.observe(viewLifecycleOwner) { result ->
+            Log.e("T", result.toString())
             when (result) {
                 DataState.Idle -> {
                 }
@@ -53,11 +54,13 @@ class CollectionsFragment : Fragment() {
                 }
             }
         }
-        viewModel.loadData(collection.id)
+        if (viewModel.data.value is DataState.Idle) viewModel.loadData(collection.id)
 
     }
 
     private fun bindRecyclerView() {
+//        photoAdapter = CollectionsPhotoAdapter()
+//        photoAdapter.setHasStableIds(true)
         photoAdapter.clickListener = { photo ->
             findNavController().navigate(MainGraphDirections.actionGlobalDetailPhotoFragment(photo))
         }
