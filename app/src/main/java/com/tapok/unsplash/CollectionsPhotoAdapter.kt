@@ -2,46 +2,76 @@ package com.tapok.unsplash
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.tapok.unsplash.databinding.CardCollectionPhotoBinding
+import com.tapok.unsplash.databinding.CardCoverCollectionBinding
+import com.tapok.unsplash.databinding.TestCardBinding
+import com.tapok.unsplash.model.CollectionsItem
 import com.tapok.unsplash.model.CollectionsPhoto
 import com.tapok.unsplash.model.UnsplashPhoto
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 
-class CollectionsPhotoAdapter : RecyclerView.Adapter<CollectionsPhotoAdapter.PhotoViewHolder>() {
-    private var dataList: CollectionsPhoto = CollectionsPhoto()
+class CollectionsPhotoAdapter :
+    PagingDataAdapter<UnsplashPhoto, CollectionsPhotoAdapter.PhotoViewHolder>(
+        PHOTOS_DIFFUTIL
+    ) {
+
+    private val set = ConstraintSet()
+
     var clickListener: ((it: UnsplashPhoto) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = CardCollectionPhotoBinding.inflate(inflater, parent, false)
+        val binding = TestCardBinding.inflate(inflater, parent, false)
         return PhotoViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        holder.bind(position)
+        val currentItem = getItem(position)
+        currentItem?.let {
+            val ratio = String.format("%d:%d", currentItem.width,currentItem.height)
+            set.clone(holder.binding.parentContsraint)
+            set.setDimensionRatio(holder.binding.imgSource.id, ratio)
+            set.applyTo(holder.binding.parentContsraint)
+            holder.bind(currentItem)
+        }
     }
 
-    override fun getItemCount(): Int = dataList.size
-
-    fun setData(dataList: CollectionsPhoto) {
-        this.dataList = dataList
-        notifyDataSetChanged()
-    }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    inner class PhotoViewHolder(val binding: CardCollectionPhotoBinding) :
+    inner class PhotoViewHolder(val binding: TestCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             itemView.setOnClickListener {
-                clickListener?.invoke(dataList[adapterPosition])
+                val currentItem = getItem(layoutPosition)
+                currentItem?.let {
+                    clickListener?.invoke(currentItem)
+                }
             }
         }
 
-        fun bind(position: Int) {
-            binding.photo = dataList[position]
+        fun bind(currentItem: UnsplashPhoto) {
+            binding.photo = currentItem
+        }
+    }
+
+    companion object {
+        private val PHOTOS_DIFFUTIL = object : DiffUtil.ItemCallback<UnsplashPhoto>() {
+            override fun areItemsTheSame(
+                oldItem: UnsplashPhoto,
+                newItem: UnsplashPhoto
+            ) =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(
+                oldItem: UnsplashPhoto,
+                newItem: UnsplashPhoto
+            ) =
+                oldItem == newItem
         }
     }
 }

@@ -37,6 +37,10 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.editText.setOnClickListener {
+            Log.e("MMM", "DDDA")
+            findNavController().navigate(MainFragmentDirections.actionNavMainFragmentToNavSearchResultsFragment())
+        }
         bindRecyclerView()
         viewModel.data.observe(viewLifecycleOwner) { result ->
             binding.randomPhoto.layoutPhoto.layout.isVisible =
@@ -60,26 +64,13 @@ class MainFragment : Fragment() {
             }
         }
         collectionsViewModel.data.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                DataState.Idle -> {
-                }
-                DataState.Start -> {
-                }
-                is DataState.Success -> {
-                    Log.e("unsplash", result.data.toString())
-                    collectionsAdapter.setData(result.data)
-                }
-                is DataState.Failed -> {
-                    Log.e("ERROR", result.e.toString())
-                }
-            }
+            collectionsAdapter.submitData(viewLifecycleOwner.lifecycle, result)
         }
         binding.viewModel = viewModel
         binding.randomPhoto.layoutPhoto.image.setOnClickListener {
             findNavController().navigate(MainGraphDirections.actionGlobalDetailPhotoFragment(binding.randomPhoto.layoutPhoto.photo!!))
         }
         if (viewModel.data.value is DataState.Idle) viewModel.loadData()
-        if (collectionsViewModel.data.value is DataState.Idle) collectionsViewModel.loadData()
     }
 
     private fun bindRecyclerView() {
@@ -88,7 +79,6 @@ class MainFragment : Fragment() {
         }
         binding.collectionList.apply {
             setHasFixedSize(true)
-//            addItemDecoration(MarginItemDecoration(20))
             layoutManager =
                 PreCachingLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             (layoutManager as PreCachingLayoutManager).initialPrefetchItemCount = 5

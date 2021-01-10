@@ -1,26 +1,20 @@
 package com.tapok.unsplash.repos
 
-import androidx.lifecycle.MutableLiveData
-import com.tapok.unsplash.model.CollectionsPhoto
-import com.tapok.unsplash.retrofit.DataState
-import com.tapok.unsplash.retrofit.RetrofitClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.liveData
+import com.tapok.unsplash.paging.CollectionPhotoPagingSource
+import com.tapok.unsplash.paging.CollectionsPagingSource
 
 class CollectionsPhotoRepository {
-    private val _data: MutableLiveData<DataState<CollectionsPhoto>> = MutableLiveData(DataState.Idle)
 
-    val data get() = _data
+    fun loadData(id: String) = Pager(
+        config = pagingConfig,
+        pagingSourceFactory = { CollectionPhotoPagingSource(id) }).liveData
 
-    suspend fun loadData(idCollection: String) {
-        withContext(Dispatchers.IO) {
-            data.postValue(DataState.Start)
-            try {
-                val response = RetrofitClient.unsplashService().getCollectionsPhoto(idCollection, 1)
-                data.postValue(DataState.Success(response))
-            } catch (e: Exception) {
-                data.postValue(DataState.Failed(e))
-            }
-        }
-    }
+    private val pagingConfig: PagingConfig = PagingConfig(
+        pageSize = 20,
+        initialLoadSize = 20,
+        enablePlaceholders = true
+    )
 }

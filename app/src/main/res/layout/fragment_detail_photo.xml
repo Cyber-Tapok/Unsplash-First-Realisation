@@ -11,10 +11,12 @@
     </data>
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="?android:dividerHorizontal"
@@ -24,6 +26,7 @@
             android:showDividers="middle">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/image_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -53,12 +56,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
+                android:id="@+id/text_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/label_information"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -68,6 +73,7 @@
                     android:textSize="18sp" />
 
                 <TextView
+                    android:id="@+id/description"
                     htmlText="@{@string/label_photo_description(photo.alt_description)}"
                     descriptionVisibility="@{photo.alt_description}"
                     android:layout_width="match_parent"
@@ -77,6 +83,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/photo_size"
                     htmlText="@{@string/photo_size(photo.width, photo.height)}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

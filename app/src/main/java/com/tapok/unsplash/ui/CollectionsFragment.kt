@@ -14,7 +14,6 @@ import com.tapok.unsplash.CollectionsPhotoAdapter
 import com.tapok.unsplash.MainGraphDirections
 import com.tapok.unsplash.databinding.FragmentCollectionsBinding
 import com.tapok.unsplash.model.CollectionsItem
-import com.tapok.unsplash.retrofit.DataState
 import com.tapok.unsplash.utils.PreCachingLayoutManager
 import com.tapok.unsplash.viewmodel.CollectionsPhotoViewModel
 
@@ -22,7 +21,7 @@ class CollectionsFragment : Fragment() {
     private lateinit var binding: FragmentCollectionsBinding
     private lateinit var collection: CollectionsItem
     private val viewModel: CollectionsPhotoViewModel by viewModels()
-    private var  photoAdapter: CollectionsPhotoAdapter = CollectionsPhotoAdapter()
+    private var photoAdapter: CollectionsPhotoAdapter = CollectionsPhotoAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,40 +34,22 @@ class CollectionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        collection = CollectionsFragmentArgs.fromBundle(requireArguments()).collection
         bindRecyclerView()
-        collection = getCollection()
         binding.collection = collection
         viewModel.data.observe(viewLifecycleOwner) { result ->
-            Log.e("T", result.toString())
-            when (result) {
-                DataState.Idle -> {
-                }
-                DataState.Start -> {
-                }
-                is DataState.Success -> {
-                    Log.e("unsplash", result.data.toString())
-                    photoAdapter.setData(result.data)
-                }
-                is DataState.Failed -> {
-                    Log.e("ERROR", result.e.toString())
-                }
-            }
+            photoAdapter.submitData(viewLifecycleOwner.lifecycle, result)
         }
-        if (viewModel.data.value is DataState.Idle) viewModel.loadData(collection.id)
-
+        savedInstanceState ?: viewModel.searchPhotos(collection.id)
     }
 
     private fun bindRecyclerView() {
-//        photoAdapter = CollectionsPhotoAdapter()
-//        photoAdapter.setHasStableIds(true)
         photoAdapter.clickListener = { photo ->
             findNavController().navigate(MainGraphDirections.actionGlobalDetailPhotoFragment(photo))
         }
         binding.photoList.apply {
-            adapter = photoAdapter
             layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            adapter = photoAdapter
         }
     }
-
-    private fun getCollection() = CollectionsFragmentArgs.fromBundle(requireArguments()).collection
 }

@@ -14,6 +14,7 @@
     <string name="text_host_error">Нет подключения к интернету</string>
     <string name="text_timeout_error">Время ожидания вышло</string>
     <string name="text_other_error">Что-то пошло не так</string>
+    <string name="hint_search">Поиск</string>
 
 
 </resources>

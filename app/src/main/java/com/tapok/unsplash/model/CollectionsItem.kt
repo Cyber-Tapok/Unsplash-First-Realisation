@@ -11,4 +11,8 @@ data class CollectionsItem(
     val title: String,
     val total_photos: Int,
     val user: User
-) : Parcelable
+) : Parcelable {
+    override fun toString(): String {
+        return "$id/n"
+    }
+}
