@@ -1,7 +1,5 @@
 package com.tapok.unsplash.retrofit
 
-
-
 sealed class DataState<out T> {
     object Idle : DataState<Nothing>()
     object Start : DataState<Nothing>()

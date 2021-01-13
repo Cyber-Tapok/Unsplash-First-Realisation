@@ -1,26 +1,17 @@
 package com.tapok.unsplash.repos
 
-import androidx.lifecycle.MutableLiveData
-import com.tapok.unsplash.model.SearchResult
-import com.tapok.unsplash.retrofit.DataState
-import com.tapok.unsplash.retrofit.RetrofitClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.liveData
+import com.tapok.unsplash.paging.CollectionPhotoPagingSource
+import com.tapok.unsplash.paging.DefaultPagingConfig
+import com.tapok.unsplash.paging.DefaultPagingConfig.Companion.pagingConfig
+import com.tapok.unsplash.paging.PhotoPagingSource
 
 class SearchPhotoRepository {
-    private val _data: MutableLiveData<DataState<SearchResult>> = MutableLiveData(DataState.Idle)
 
-    val data get() = _data
+    fun loadData(query: String) = Pager(
+        config = pagingConfig,
+        pagingSourceFactory = { PhotoPagingSource(query) }).liveData
 
-    suspend fun loadData(query: String) {
-        withContext(Dispatchers.IO) {
-            data.postValue(DataState.Start)
-            try {
-                val response = RetrofitClient.unsplashService().searchPhotos(query, 1)
-                data.postValue(DataState.Success(response))
-            } catch (e: Exception) {
-                data.postValue(DataState.Failed(e))
-            }
-        }
-    }
 }

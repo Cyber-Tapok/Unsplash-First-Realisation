@@ -37,7 +37,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
-                    android:contentDescription="@{collection.cover_photo.alt_description}"
+                    android:contentDescription="@{collection.cover_photo.altDescription}"
                     android:scaleType="centerCrop"
                     app:loadPhoto="@{collection.cover_photo}" />
 

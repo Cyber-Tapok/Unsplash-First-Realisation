@@ -1,26 +1,24 @@
 package com.tapok.unsplash.viewmodel
 
-import androidx.databinding.ObservableBoolean
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.tapok.unsplash.repos.SearchPhotoRepository
-import kotlinx.coroutines.launch
 
 class SearchPhotoViewModel : ViewModel() {
 
     private val repository = SearchPhotoRepository()
 
-    private val _data = repository.data
+    private val currentQuery: MutableLiveData<String> = MutableLiveData()
+
+    private val _data =
+        currentQuery.switchMap { id -> repository.loadData(id).cachedIn(viewModelScope) }
 
     val data get() = _data
 
-    val isRefreshing = ObservableBoolean()
-
-    fun loadData(query: String) {
-        isRefreshing.set(true)
-        viewModelScope.launch {
-            repository.loadData(query)
-            isRefreshing.set(false)
-        }
+    fun searchPhotos(id: String) {
+        currentQuery.value = id
     }
 }

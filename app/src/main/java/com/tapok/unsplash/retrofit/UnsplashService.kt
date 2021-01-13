@@ -38,11 +38,12 @@ interface UnsplashService {
     suspend fun searchPhotos(
         @Query("query") query: String,
         @Query("page") page: Int,
+        @Query("per_page") perPage: Int = PER_PAGE_DEFAULT,
         @Query("client_id") clientId: String = CLIENT_ID,
     ): SearchResult
 
     companion object {
         private const val CLIENT_ID = BuildConfig.ACCESS_KEY
-        private const val PER_PAGE_DEFAULT = 20
+        private const val PER_PAGE_DEFAULT = 10
     }
 }

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tapok.unsplash.databinding.FragmentDetailPhotoBinding
@@ -18,8 +19,6 @@ import com.tapok.unsplash.viewmodel.RandomViewModel
 
 class DetailPhotoFragment : Fragment() {
     private lateinit var binding: FragmentDetailPhotoBinding
-
-//    private val viewModel: RandomViewModel by viewModels()
     private lateinit var photo: UnsplashPhoto
 
     override fun onCreateView(
@@ -33,13 +32,17 @@ class DetailPhotoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.e("aa", savedInstanceState.toString())
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         photo = getPhoto()
         binding.photo = photo
         binding.fullPhoto.setOnClickListener {
             openFullPhoto(photo.urls.full)
         }
-//        binding.photo = (viewModel.data.value as DataState.Success).data
+    }
+
+    override fun onDetach() {
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        super.onDetach()
     }
 
     private fun getPhoto() = DetailPhotoFragmentArgs.fromBundle(requireArguments()).photo

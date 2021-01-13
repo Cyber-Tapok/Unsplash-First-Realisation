@@ -8,10 +8,8 @@ class CollectionsPagingSource : PagingSource<Int, CollectionsItem>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CollectionsItem> {
         val position = params.key ?: STARTING_PAGE
-
         return try {
-            val response =
-                RetrofitClient.unsplashService().getCollections(position, params.loadSize)
+            val response = requestToApi(position, params.loadSize)
             LoadResult.Page(
                 data = response,
                 prevKey = if (position == STARTING_PAGE) null else position - 1,
@@ -22,7 +20,9 @@ class CollectionsPagingSource : PagingSource<Int, CollectionsItem>() {
         }
     }
 
-    companion object {
+    private suspend fun requestToApi(position: Int, loadSize: Int) = RetrofitClient.unsplashService().getCollections(position, loadSize)
+
+        companion object {
         private const val STARTING_PAGE = 1
     }
 }

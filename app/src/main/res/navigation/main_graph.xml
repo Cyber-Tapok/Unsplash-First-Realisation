@@ -33,11 +33,11 @@
     </fragment>
     <fragment
         android:id="@+id/nav_search_results_fragment"
-        android:name="com.tapok.unsplash.ui.SearchResultsFragment"
+        android:name="com.tapok.unsplash.ui.SearchFragment"
         android:label="SearchResultsFragment" />
     <fragment
         android:id="@+id/nav_collections_fragment"
-        android:name="com.tapok.unsplash.ui.CollectionsFragment"
+        android:name="com.tapok.unsplash.ui.CollectionPhotoFragment"
         android:label="CollectionsFragment" >
         <argument
             android:name="Collection"

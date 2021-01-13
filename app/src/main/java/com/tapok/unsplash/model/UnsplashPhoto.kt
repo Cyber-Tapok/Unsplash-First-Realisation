@@ -10,6 +10,6 @@ data class UnsplashPhoto(
     @SerializedName("width") val width: Int,
     @SerializedName("height") val height: Int,
     @SerializedName("blur_hash") val blurHash: String,
-    @SerializedName("alt_description") val alt_description: String,
+    @SerializedName("alt_description") val altDescription: String,
     @SerializedName("urls") val urls: Urls,
 ) : Parcelable

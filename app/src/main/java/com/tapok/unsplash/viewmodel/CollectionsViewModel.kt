@@ -18,12 +18,4 @@ class CollectionsViewModel : ViewModel() {
     val data get() = _data
 
     val isRefreshing = ObservableBoolean()
-
-//    fun loadData() {
-//        isRefreshing.set(true)
-//        viewModelScope.launch {
-//            repository.loadData()
-//            isRefreshing.set(false)
-//        }
-//    }
 }

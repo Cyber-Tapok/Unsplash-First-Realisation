@@ -19,10 +19,9 @@ class CollectionsPhotoViewModel : ViewModel() {
 
     val data get() = _data
 
-    fun searchPhotos(id: String) {
+    fun getPhoto(id: String) {
         currentQuery.value = id
     }
-
 
     val isRefreshing = ObservableBoolean()
 }

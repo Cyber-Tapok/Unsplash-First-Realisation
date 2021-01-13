@@ -14,7 +14,4 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.Unsplash.Launcher">
-        <item name="android:windowBackground">@drawable/splash_screen</item>
-    </style>
 </resources>
