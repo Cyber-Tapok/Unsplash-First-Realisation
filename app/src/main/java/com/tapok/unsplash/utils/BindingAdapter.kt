@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 @BindingAdapter("loadPhoto")
 fun ImageView.loadImage(photo: UnsplashPhoto?) {
     if (photo != null) {
-        layout(0,0,0,0)
+        layout(0, 0, 0, 0)
         GlobalScope.launch(Dispatchers.IO) {
             val bitmap = BlurHashDecoder.decode(
                 photo.blurHash,
@@ -30,7 +30,7 @@ fun ImageView.loadImage(photo: UnsplashPhoto?) {
             withContext(Dispatchers.Main) {
                 Glide.with(this@loadImage)
                     .load(photo.urls.regular)
-                    .override(SIZE_ORIGINAL/2, SIZE_ORIGINAL/2)
+                    .override(SIZE_ORIGINAL / 2, SIZE_ORIGINAL / 2)
                     .placeholder(drawable)
                     .into(this@loadImage)
             }

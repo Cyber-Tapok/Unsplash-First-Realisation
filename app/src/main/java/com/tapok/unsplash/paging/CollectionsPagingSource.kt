@@ -20,9 +20,10 @@ class CollectionsPagingSource : PagingSource<Int, CollectionsItem>() {
         }
     }
 
-    private suspend fun requestToApi(position: Int, loadSize: Int) = RetrofitClient.unsplashService().getCollections(position, loadSize)
+    private suspend fun requestToApi(position: Int, loadSize: Int) =
+        RetrofitClient.unsplashService().getCollections(position, loadSize)
 
-        companion object {
+    companion object {
         private const val STARTING_PAGE = 1
     }
 }

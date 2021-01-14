@@ -38,6 +38,10 @@ class SearchFragment : Fragment() {
             true
         }
         bindRecyclerView()
+        initObservers()
+    }
+
+    private fun initObservers() {
         viewModel.data.observe(viewLifecycleOwner) { result ->
             photoAdapter.submitData(viewLifecycleOwner.lifecycle, result)
         }

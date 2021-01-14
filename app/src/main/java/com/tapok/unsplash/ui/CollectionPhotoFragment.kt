@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.tapok.unsplash.PhotoAdapter
 import com.tapok.unsplash.MainGraphDirections
+import com.tapok.unsplash.PhotoAdapter
 import com.tapok.unsplash.databinding.FragmentCollectionsBinding
 import com.tapok.unsplash.model.CollectionsItem
 import com.tapok.unsplash.viewmodel.CollectionsPhotoViewModel
@@ -32,13 +32,11 @@ class CollectionPhotoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         collection = CollectionPhotoFragmentArgs.fromBundle(requireArguments()).collection
-        bindRecyclerView()
         binding.collection = collection
-        viewModel.data.observe(viewLifecycleOwner) { result ->
-            photoAdapter.submitData(viewLifecycleOwner.lifecycle, result)
-        }
-        savedInstanceState ?: viewModel.getPhoto(collection.id)
+        bindRecyclerView()
         bindRefreshLayout()
+        initObservers()
+        savedInstanceState ?: viewModel.getPhoto(collection.id)
     }
 
     private fun bindRefreshLayout() {
@@ -48,6 +46,12 @@ class CollectionPhotoFragment : Fragment() {
                 viewModel.getPhoto(collection.id)
                 isRefreshing = false
             }
+        }
+    }
+
+    private fun initObservers() {
+        viewModel.data.observe(viewLifecycleOwner) { result ->
+            photoAdapter.submitData(viewLifecycleOwner.lifecycle, result)
         }
     }
 

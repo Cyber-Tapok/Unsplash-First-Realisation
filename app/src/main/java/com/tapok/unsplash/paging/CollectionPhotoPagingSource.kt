@@ -1,7 +1,6 @@
 package com.tapok.unsplash.paging
 
 import androidx.paging.PagingSource
-import com.tapok.unsplash.model.CollectionsPhoto
 import com.tapok.unsplash.model.UnsplashPhoto
 import com.tapok.unsplash.retrofit.RetrofitClient
 
@@ -21,7 +20,8 @@ class CollectionPhotoPagingSource(private val id: String) : PagingSource<Int, Un
         }
     }
 
-    private suspend fun requestToApi(id: String, position: Int, loadSize: Int) = RetrofitClient.unsplashService().getCollectionsPhoto(id, position, loadSize)
+    private suspend fun requestToApi(id: String, position: Int, loadSize: Int) =
+        RetrofitClient.unsplashService().getCollectionsPhoto(id, position, loadSize)
 
     companion object {
         private const val STARTING_PAGE = 1

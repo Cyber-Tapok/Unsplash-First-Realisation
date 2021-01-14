@@ -8,9 +8,7 @@ import androidx.paging.cachedIn
 import com.tapok.unsplash.repos.SearchPhotoRepository
 
 class SearchPhotoViewModel : ViewModel() {
-
     private val repository = SearchPhotoRepository()
-
     private val currentQuery: MutableLiveData<String> = MutableLiveData()
 
     private val _data =

@@ -6,7 +6,6 @@ import com.tapok.unsplash.retrofit.DataState
 import com.tapok.unsplash.retrofit.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.net.SocketTimeoutException
 
 class RandomRepository {
     private val _data: MutableLiveData<DataState<UnsplashPhoto>> = MutableLiveData(DataState.Idle)

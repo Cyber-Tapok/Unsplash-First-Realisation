@@ -16,6 +16,7 @@ import com.tapok.unsplash.MainGraphDirections
 import com.tapok.unsplash.databinding.FragmentMainBinding
 import com.tapok.unsplash.retrofit.DataState
 import com.tapok.unsplash.utils.PreCachingLayoutManager
+import com.tapok.unsplash.utils.getDisplayWidth
 import com.tapok.unsplash.utils.getMessageId
 import com.tapok.unsplash.viewmodel.CollectionsViewModel
 import com.tapok.unsplash.viewmodel.RandomViewModel
@@ -43,6 +44,17 @@ class MainFragment : Fragment() {
             findNavController().navigate(MainFragmentDirections.actionNavMainFragmentToNavSearchResultsFragment())
         }
         bindRecyclerView()
+        initObservers()
+        binding.apply {
+            randomPhoto.layoutLoadPhoto.image.setOnClickListener {
+                findNavController().navigate(MainGraphDirections.actionGlobalDetailPhotoFragment(binding.randomPhoto.layoutLoadPhoto.photo!!))
+            }
+        }
+        if (viewModel.data.value is DataState.Idle) viewModel.loadData()
+        bindRefreshLayout()
+    }
+
+    private fun initObservers() {
         viewModel.data.observe(viewLifecycleOwner) { result ->
             binding.apply {
                 randomPhoto.layoutLoadPhoto.layout.isVisible = result !is DataState.Idle && result !is DataState.Failed
@@ -66,12 +78,6 @@ class MainFragment : Fragment() {
         collectionsViewModel.data.observe(viewLifecycleOwner) { result ->
             collectionsAdapter.submitData(viewLifecycleOwner.lifecycle, result)
         }
-        binding.randomViewModel = viewModel
-        binding.randomPhoto.layoutLoadPhoto.image.setOnClickListener {
-            findNavController().navigate(MainGraphDirections.actionGlobalDetailPhotoFragment(binding.randomPhoto.layoutLoadPhoto.photo!!))
-        }
-        if (viewModel.data.value is DataState.Idle) viewModel.loadData()
-        bindRefreshLayout()
     }
 
     private fun bindRefreshLayout() {
@@ -103,5 +109,4 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun getDisplayWidth() = resources.displayMetrics.widthPixels * 2
 }

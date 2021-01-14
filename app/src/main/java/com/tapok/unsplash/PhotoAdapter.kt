@@ -12,9 +12,7 @@ import com.tapok.unsplash.utils.calculateRatio
 
 class PhotoAdapter :
     PagingDataAdapter<UnsplashPhoto, PhotoAdapter.PhotoViewHolder>(PHOTOS_DIFFUTIL) {
-
     private val set = ConstraintSet()
-
     var clickListener: ((it: UnsplashPhoto) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
