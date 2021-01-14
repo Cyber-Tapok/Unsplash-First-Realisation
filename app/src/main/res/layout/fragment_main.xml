@@ -5,16 +5,14 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="randomViewModel"
             type="com.tapok.unsplash.viewmodel.RandomViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:onRefreshListener="@{() -> viewModel.loadData()}"
-        app:refreshing="@{viewModel.isRefreshing}">
+        android:layout_height="match_parent">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -28,41 +26,24 @@
                 android:padding="10dp"
                 android:showDividers="middle">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/search_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="20dp"
+                    android:hint="@string/hint_search"
+                    app:startIconDrawable="@drawable/ic_search_24px">
 
-                    <TextView
-                        android:id="@+id/label_app_name"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_text"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="20dp"
-                        android:text="@string/app_name"
-                        android:textColor="@android:color/white"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="20dp"
-                        android:hint="@string/hint_search"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/label_app_name"
-                        app:startIconDrawable="@drawable/ic_search_24px">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/edit_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:inputType="none"
-                            android:focusable="false"
-                            android:cursorVisible="false"
-                            android:longClickable="false"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_height="match_parent"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:longClickable="false" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <include
                     android:id="@+id/random_photo"
@@ -71,6 +52,7 @@
                     android:layout_height="wrap_content" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/collections_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 

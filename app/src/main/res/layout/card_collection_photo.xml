@@ -18,7 +18,7 @@
         app:cardElevation="0dp">
 
         <ImageView
-            android:id="@+id/layout_photo"
+            android:id="@+id/layout_load_photo"
             loadPhoto="@{photo}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

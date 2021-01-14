@@ -1,6 +1,5 @@
 package com.tapok.unsplash.viewmodel
 
-import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
@@ -23,5 +22,4 @@ class CollectionsPhotoViewModel : ViewModel() {
         currentQuery.value = id
     }
 
-    val isRefreshing = ObservableBoolean()
 }

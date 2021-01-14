@@ -38,6 +38,17 @@ class CollectionPhotoFragment : Fragment() {
             photoAdapter.submitData(viewLifecycleOwner.lifecycle, result)
         }
         savedInstanceState ?: viewModel.getPhoto(collection.id)
+        bindRefreshLayout()
+    }
+
+    private fun bindRefreshLayout() {
+        binding.swipeContainer.apply {
+            setOnRefreshListener {
+                isRefreshing = true
+                viewModel.getPhoto(collection.id)
+                isRefreshing = false
+            }
+        }
     }
 
     private fun bindRecyclerView() {

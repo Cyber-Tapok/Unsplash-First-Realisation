@@ -32,17 +32,11 @@ class DetailPhotoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         photo = getPhoto()
         binding.photo = photo
         binding.fullPhoto.setOnClickListener {
             openFullPhoto(photo.urls.full)
         }
-    }
-
-    override fun onDetach() {
-        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-        super.onDetach()
     }
 
     private fun getPhoto() = DetailPhotoFragmentArgs.fromBundle(requireArguments()).photo

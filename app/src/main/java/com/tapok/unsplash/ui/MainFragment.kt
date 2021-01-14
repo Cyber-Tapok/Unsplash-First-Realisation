@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tapok.unsplash.CollectionsAdapter
@@ -18,11 +19,11 @@ import com.tapok.unsplash.utils.PreCachingLayoutManager
 import com.tapok.unsplash.utils.getMessageId
 import com.tapok.unsplash.viewmodel.CollectionsViewModel
 import com.tapok.unsplash.viewmodel.RandomViewModel
+import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private val collectionsAdapter = CollectionsAdapter()
-
     private val viewModel: RandomViewModel by viewModels()
     private val collectionsViewModel: CollectionsViewModel by viewModels()
 
@@ -32,50 +33,65 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMainBinding.inflate(layoutInflater, container, false)
+        binding.lifecycleOwner = this
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.editText.setOnClickListener {
-            Log.e("MMM", "DDDA")
             findNavController().navigate(MainFragmentDirections.actionNavMainFragmentToNavSearchResultsFragment())
         }
         bindRecyclerView()
         viewModel.data.observe(viewLifecycleOwner) { result ->
-            binding.randomPhoto.layoutPhoto.layout.isVisible =
-                result !is DataState.Idle && result !is DataState.Failed
-            binding.randomPhoto.layoutError.layout.isVisible =
-                result is DataState.Failed
+            binding.apply {
+                randomPhoto.layoutLoadPhoto.layout.isVisible = result !is DataState.Idle && result !is DataState.Failed
+                randomPhoto.layoutError.layout.isVisible = result is DataState.Failed
+                collectionsLayout.isVisible = result !is DataState.Failed
+                searchLayout.isVisible = result !is DataState.Failed
+
+            }
             when (result) {
-                DataState.Idle -> {
-                }
-                DataState.Start -> {
-                }
                 is DataState.Success -> {
-                    Log.e("unsplash", result.data.toString())
-                    binding.randomPhoto.layoutPhoto.photo = result.data
+                    binding.randomPhoto.layoutLoadPhoto.photo = result.data
                 }
                 is DataState.Failed -> {
-                    Log.e("ERROR", result.e.toString())
                     binding.randomPhoto.layoutError.textError.text =
                         getString(result.e.getMessageId())
+                }
+                else -> {
                 }
             }
         }
         collectionsViewModel.data.observe(viewLifecycleOwner) { result ->
             collectionsAdapter.submitData(viewLifecycleOwner.lifecycle, result)
         }
-        binding.viewModel = viewModel
-        binding.randomPhoto.layoutPhoto.image.setOnClickListener {
-            findNavController().navigate(MainGraphDirections.actionGlobalDetailPhotoFragment(binding.randomPhoto.layoutPhoto.photo!!))
+        binding.randomViewModel = viewModel
+        binding.randomPhoto.layoutLoadPhoto.image.setOnClickListener {
+            findNavController().navigate(MainGraphDirections.actionGlobalDetailPhotoFragment(binding.randomPhoto.layoutLoadPhoto.photo!!))
         }
         if (viewModel.data.value is DataState.Idle) viewModel.loadData()
+        bindRefreshLayout()
+    }
+
+    private fun bindRefreshLayout() {
+        binding.swipeContainer.apply {
+            setOnRefreshListener {
+                isRefreshing = true
+                collectionsViewModel.refresh()
+                viewModel.loadData()
+                isRefreshing = false
+            }
+        }
     }
 
     private fun bindRecyclerView() {
         collectionsAdapter.clickListener = { collection ->
-            findNavController().navigate(MainFragmentDirections.actionNavMainFragmentToNavCollectionsFragment(collection))
+            findNavController().navigate(
+                MainFragmentDirections.actionNavMainFragmentToNavCollectionsFragment(
+                    collection
+                )
+            )
         }
         binding.collectionList.apply {
             setHasFixedSize(true)

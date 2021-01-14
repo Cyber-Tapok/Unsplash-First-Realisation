@@ -10,7 +10,7 @@
         android:orientation="vertical">
 
         <include
-            android:id="@+id/layout_photo"
+            android:id="@+id/layout_load_photo"
             layout="@layout/card_load_photo"
             android:layout_width="match_parent"
             android:layout_height="250dp"
